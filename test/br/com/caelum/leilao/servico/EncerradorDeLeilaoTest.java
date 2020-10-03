@@ -133,4 +133,26 @@ public class EncerradorDeLeilaoTest {
         assertTrue(tvDePlasma.isEncerrado());
         assertTrue(geladeira.isEncerrado());
     }
+
+    @Test
+    public void nuncaEnviarEmailSeTodosOsLeiloesFalharem() {
+        data.set(1999, 10, 20);
+
+        var tvDePlasma = new CriadorDeLeilao().para("Tv de plasma").naData(data).constroi();
+        var geladeira = new CriadorDeLeilao().para("Geladeira").naData(data).constroi();
+
+        RepositorioDeLeilao repositorioDeLeilaoMock = mock(RepositorioDeLeilao.class);
+        when(repositorioDeLeilaoMock.correntes()).thenReturn(Arrays.asList(tvDePlasma, geladeira));
+
+        doThrow(new RuntimeException()).when(repositorioDeLeilaoMock).atualiza(tvDePlasma);
+        doThrow(new RuntimeException()).when(repositorioDeLeilaoMock).atualiza(geladeira);
+
+        EnviadorDeEmail enviadorDeEmailMock = mock(EnviadorDeEmail.class);
+
+        EncerradorDeLeilao encerradorDeLeilao = new EncerradorDeLeilao(repositorioDeLeilaoMock, enviadorDeEmailMock);
+        encerradorDeLeilao.encerra();
+
+        verify(enviadorDeEmailMock, never()).envia(tvDePlasma);
+        verify(enviadorDeEmailMock, never()).envia(geladeira);
+    }
 }
