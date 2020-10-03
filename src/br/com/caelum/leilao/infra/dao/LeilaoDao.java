@@ -1,5 +1,9 @@
 package br.com.caelum.leilao.infra.dao;
 
+import br.com.caelum.leilao.dominio.Lance;
+import br.com.caelum.leilao.dominio.Leilao;
+import br.com.caelum.leilao.dominio.Usuario;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -11,13 +15,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import br.com.caelum.leilao.dominio.Lance;
-import br.com.caelum.leilao.dominio.Leilao;
-import br.com.caelum.leilao.dominio.Usuario;
+public class LeilaoDao implements RepositorioDeLeilao {
 
-public class LeilaoDao {
-
-	private Connection conexao;
+	private final Connection conexao;
 
 	public LeilaoDao() {
 		try {

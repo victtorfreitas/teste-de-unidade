@@ -1,17 +1,21 @@
 package br.com.caelum.leilao.servico;
 
+import br.com.caelum.leilao.dominio.Leilao;
+import br.com.caelum.leilao.infra.dao.RepositorioDeLeilao;
+
 import java.util.Calendar;
 import java.util.List;
-
-import br.com.caelum.leilao.dominio.Leilao;
-import br.com.caelum.leilao.infra.dao.LeilaoDao;
 
 public class EncerradorDeLeilao {
 
 	private int total = 0;
+	private final RepositorioDeLeilao dao;
+
+	public EncerradorDeLeilao(RepositorioDeLeilao dao) {
+		this.dao = dao;
+	}
 
 	public void encerra() {
-		LeilaoDao dao = new LeilaoDao();
 		List<Leilao> todosLeiloesCorrentes = dao.correntes();
 
 		for (Leilao leilao : todosLeiloesCorrentes) {

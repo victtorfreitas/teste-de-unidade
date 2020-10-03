@@ -1,23 +1,23 @@
 package br.com.caelum.leilao.infra.dao;
 
+import br.com.caelum.leilao.dominio.Leilao;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.caelum.leilao.dominio.Leilao;
+public class LeilaoDaoFalso implements RepositorioDeLeilao {
 
-public class LeilaoDaoFalso {
+	private static final List<Leilao> leiloes = new ArrayList<Leilao>();
 
-	private static List<Leilao> leiloes = new ArrayList<Leilao>();;
-	
 	public void salva(Leilao leilao) {
 		leiloes.add(leilao);
 	}
 
 	public List<Leilao> encerrados() {
-		
+
 		List<Leilao> filtrados = new ArrayList<Leilao>();
-		for(Leilao leilao : leiloes) {
-			if(leilao.isEncerrado()) filtrados.add(leilao);
+		for (Leilao leilao : leiloes) {
+			if (leilao.isEncerrado()) filtrados.add(leilao);
 		}
 
 		return filtrados;
