@@ -14,7 +14,9 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -107,5 +109,27 @@ public class EncerradorDeLeilaoTest {
 
         verify(daoFalso, never()).atualiza(leilao1);
         verify(daoFalso, never()).atualiza(leilao2);
+    }
+
+    @Test
+    public void deveContinuarExecucaoMesmoSeBancoEstiverFora() {
+        data.set(1999, 10, 20);
+
+        var tvDePlasma = new CriadorDeLeilao().para("Tv de plasma").naData(data).constroi();
+        var geladeira = new CriadorDeLeilao().para("Geladeira").naData(data).constroi();
+
+        RepositorioDeLeilao repositorioDeLeilaoMock = mock(RepositorioDeLeilao.class);
+        when(repositorioDeLeilaoMock.correntes()).thenReturn(Arrays.asList(tvDePlasma, geladeira));
+
+        doThrow(new RuntimeException()).when(repositorioDeLeilaoMock).atualiza(tvDePlasma);
+
+        EnviadorDeEmail enviadorDeEmailMock = mock(EnviadorDeEmail.class);
+
+        EncerradorDeLeilao encerradorDeLeilao = new EncerradorDeLeilao(repositorioDeLeilaoMock, enviadorDeEmailMock);
+        encerradorDeLeilao.encerra();
+
+        assertEquals(2, encerradorDeLeilao.getTotalEncerrados());
+        assertTrue(tvDePlasma.isEncerrado());
+        assertTrue(geladeira.isEncerrado());
     }
 }
