@@ -124,6 +124,7 @@ public class EncerradorDeLeilaoTest {
         doThrow(new RuntimeException()).when(repositorioDeLeilaoMock).atualiza(tvDePlasma);
 
         EnviadorDeEmail enviadorDeEmailMock = mock(EnviadorDeEmail.class);
+        doThrow(new RuntimeException()).when(enviadorDeEmailMock).envia(tvDePlasma);
 
         EncerradorDeLeilao encerradorDeLeilao = new EncerradorDeLeilao(repositorioDeLeilaoMock, enviadorDeEmailMock);
         encerradorDeLeilao.encerra();
